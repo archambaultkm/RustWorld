@@ -125,6 +125,16 @@ impl GameWindow {
                         self.camera.process_keyboard(RIGHT, delta_time);
                     }
                 }
+                VirtualKeyCode::Q => {
+                    if input.state == ElementState::Pressed {
+                        self.camera.process_keyboard(UP, delta_time);
+                    }
+                }
+                VirtualKeyCode::Z => {
+                    if input.state == ElementState::Pressed {
+                        self.camera.process_keyboard(DOWN, delta_time);
+                    }
+                }
                 VirtualKeyCode::F => {
                     if input.state == ElementState::Pressed {
                         polygon_mode(Fill);

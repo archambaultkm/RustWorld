@@ -14,6 +14,8 @@ pub enum Camera_Movement {
     BACKWARD,
     LEFT,
     RIGHT,
+    UP,
+    DOWN
 }
 use self::Camera_Movement::*;
 
@@ -21,7 +23,7 @@ use self::Camera_Movement::*;
 const YAW: f32 = -90.0;
 const PITCH: f32 = 0.0;
 const SPEED: f32 = 50.0;
-const SENSITIVITY: f32 = 0.1;
+const SENSITIVITY: f32 = 0.2;
 const ZOOM: f32 = 45.0;
 
 pub struct Camera {
@@ -79,6 +81,12 @@ impl Camera {
         }
         if direction == RIGHT {
             self.position += self.right * velocity;
+        }
+        if direction == UP {
+            self.position += self.up * velocity;
+        }
+        if direction == DOWN {
+            self.position -= self.up * velocity;
         }
     }
 
