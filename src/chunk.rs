@@ -40,12 +40,12 @@ impl Chunk {
 
         let mut columns = Vec::new();
 
-        let x = x_origin as usize;
-        let z = z_origin as usize;
+        let x = x_origin;
+        let z = z_origin;
 
-        for i in x..CHUNK_SIZE {
-            for j in z..CHUNK_SIZE {
-                columns.push(ChunkColumn::new(i as f32, j as f32));
+        for i in 0..CHUNK_SIZE {
+            for j in 0..CHUNK_SIZE {
+                columns.push(ChunkColumn::new(i as f32 + x, j  as f32 + z));
             }
         }
 
