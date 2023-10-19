@@ -25,7 +25,8 @@ impl GameWindow {
 
         let window = WindowBuilder::new()
             .with_title(TITLE)
-            .with_inner_size(LogicalSize::new(WINDOW_WIDTH, WINDOW_HEIGHT));
+            //.with_inner_size(LogicalSize::new(WINDOW_WIDTH, WINDOW_HEIGHT)); //for set size
+            .with_fullscreen(Some(glutin::window::Fullscreen::Borderless(None))); //None for default monitor
 
         let context = unsafe {
             ContextBuilder::new()
@@ -64,7 +65,7 @@ impl GameWindow {
                 }
 
                 WindowEvent::KeyboardInput { input, .. } => {
-                    self.process_key_input(input, delta_time);
+                    self.process_key_input(input, delta_time, control_flow);
                 }
 
                 WindowEvent::CursorMoved { position, .. } => {
@@ -94,15 +95,12 @@ impl GameWindow {
         }
     }
 
-    pub fn process_key_input(&mut self, input : KeyboardInput, delta_time : f32) {
+    pub fn process_key_input(&mut self, input : KeyboardInput, delta_time : f32, control_flow : &mut ControlFlow) {
         if let Some(key_code) = input.virtual_keycode {
             match key_code {
                 VirtualKeyCode::Escape => {
                     if input.state == ElementState::Pressed {
-                        // Set the window to close when Escape key is pressed.
-                        // Note: You'll need to handle window closing separately in your event loop.
-                        // For example, you can set the control flow to ControlFlow::Exit.
-                        // control_flow = ControlFlow::Exit;
+                        *control_flow = ControlFlow::Exit;
                     }
                 }
                 VirtualKeyCode::W => {

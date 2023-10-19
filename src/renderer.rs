@@ -33,6 +33,7 @@ impl Renderer {
         unsafe {
             gl::UseProgram(self.shader_program.id);
             gl::Enable(gl::DEPTH_TEST);
+            gl::Enable(gl::CULL_FACE);
 
             // Generate and bind vertex array object (VAO)
             gl::GenVertexArrays(1, &mut self.vao);

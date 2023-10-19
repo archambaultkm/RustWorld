@@ -25,14 +25,13 @@ impl Game {
 
         let world = World::new();
         let cube_positions = world.cube_positions.clone();
-        //let test_cube_pos = Vector3::new(0.0, 0.0, 0.0);
 
         let mut renderer = Renderer::new();
         renderer.init_renderer(world);
 
         // Initialize variables for tracking time
         let mut last_frame_time = std::time::Instant::now();
-        let mut delta_time = std::time::Duration::new(0, 0);
+        let mut delta_time = std::time::Duration::from_secs(0);
 
         // Main event loop runs until application is terminated.
         event_loop.run(move |event, _, control_flow| {
@@ -51,7 +50,7 @@ impl Game {
 
             let projection: Matrix4<f32> = perspective(
                 Deg(window.camera.zoom),
-                WINDOW_WIDTH as f32 / WINDOW_HEIGHT as f32,
+                16.0 / 9.0,
                 0.1,
                 100.0
             );

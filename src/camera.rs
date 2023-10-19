@@ -83,10 +83,10 @@ impl Camera {
             self.position += self.right * velocity;
         }
         if direction == UP {
-            self.position += self.up * velocity;
+            self.position.y += self.up.y * velocity;
         }
         if direction == DOWN {
-            self.position -= self.up * velocity;
+            self.position.y -= self.up.y * velocity;
         }
     }
 
