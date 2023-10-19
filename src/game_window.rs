@@ -36,7 +36,7 @@ impl GameWindow {
         }.unwrap();
 
         let camera = Camera {
-            position: Point3::new(0.0, 0.0, 3.0),
+            position: Point3::new(00.0, 10.0, 70.0),
             ..Camera::default()
         };
 

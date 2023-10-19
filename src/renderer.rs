@@ -20,7 +20,7 @@ impl Renderer {
 
         //TODO shouldn't be hard coded
         let shader_program = Shader::new("shaders/shader.vert", "shaders/shader.frag");
-        let texture1 = unsafe { Texture::new("resources/textures/wall.jpeg") };
+        let texture1 = unsafe { Texture::new("resources/textures/wall.jpeg", false) };
 
         Renderer {
             shader_program,
@@ -33,7 +33,7 @@ impl Renderer {
         unsafe {
             gl::UseProgram(self.shader_program.id);
             gl::Enable(gl::DEPTH_TEST);
-            gl::Enable(gl::CULL_FACE);
+            gl::Enable(gl::CULL_FACE_MODE);
 
             // Generate and bind vertex array object (VAO)
             gl::GenVertexArrays(1, &mut self.vao);

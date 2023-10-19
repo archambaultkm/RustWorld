@@ -22,8 +22,8 @@ use self::Camera_Movement::*;
 // Default camera values
 const YAW: f32 = -90.0;
 const PITCH: f32 = 0.0;
-const SPEED: f32 = 50.0;
-const SENSITIVITY: f32 = 0.2;
+const SPEED: f32 = 100.0;
+const SENSITIVITY: f32 = 0.1;
 const ZOOM: f32 = 45.0;
 
 pub struct Camera {
@@ -86,7 +86,7 @@ impl Camera {
             self.position.y += self.up.y * velocity;
         }
         if direction == DOWN {
-            self.position.y -= self.up.y * velocity;
+            self.position.y += -(self.up.y * velocity);
         }
     }
 
