@@ -1,7 +1,7 @@
 use std::ffi::{CStr, CString};
 use std::fs::File;
 use std::io::Read;
-use cgmath::{Matrix, Matrix4};
+use cgmath::{Array, Matrix, Matrix4, Vector4};
 use gl::types::{GLchar, GLenum, GLint, GLuint};
 
 pub struct Shader {

@@ -1,8 +1,5 @@
-use std::rc::Rc;
 use cgmath::{Deg, InnerSpace, Matrix4, perspective, vec3, Vector3};
-use glutin::event::VirtualKeyCode::RControl;
 use glutin::event_loop::{ControlFlow, EventLoop};
-use crate::game_specs::{WINDOW_HEIGHT, WINDOW_WIDTH};
 use crate::game_window::GameWindow;
 use crate::renderer::Renderer;
 use crate::world::World;
@@ -48,6 +45,7 @@ impl Game {
             // events
             window.process_events(event, delta_time, control_flow);
 
+            // update projectin, view, model matrices
             let projection: Matrix4<f32> = perspective(
                 Deg(window.camera.zoom),
                 16.0 / 9.0,

@@ -1,8 +1,9 @@
 use std::ffi::CString;
 use std::mem;
-use cgmath::{Deg, InnerSpace, Matrix4, vec3, Vector3};
+use cgmath::{Matrix4};
 use gl::types::{GLenum, GLfloat, GLsizei, GLuint};
-use RustWorld::{polygon_mode, PolygonMode};
+use RustWorld::{polygon_mode};
+use crate::block_config::{load_block_config};
 use crate::game_specs::POLYGON_MODE;
 use crate::shader::Shader;
 use crate::texture::Texture;
@@ -11,7 +12,7 @@ use crate::world::World;
 pub struct Renderer {
     shader_program : Shader,
     vao : GLuint,
-    texture1 : Texture
+    block_atlas: Texture
 }
 
 impl Renderer {
@@ -20,12 +21,12 @@ impl Renderer {
 
         //TODO shouldn't be hard coded
         let shader_program = Shader::new("shaders/shader.vert", "shaders/shader.frag");
-        let texture1 = unsafe { Texture::new("resources/textures/wall.jpeg", false) };
+        let block_atlas = unsafe { Texture::new("resources/textures/spritesheet.png", true) };
 
         Renderer {
             shader_program,
             vao: 0,
-            texture1,
+            block_atlas,
         }
     }
 
@@ -58,7 +59,17 @@ impl Renderer {
             self.define_attrib_pointers(stride);
 
             //assign shader sampler to texture unit
-            self.shader_program.set_int(&CString::new("texture1").unwrap(), 0);
+            self.shader_program.set_int(&CString::new("blockAtlas").unwrap(), 0);
+
+            if let Ok(block_config) = load_block_config() {
+                // TODO needs to apply to all texture types/ sides- handle in the fragment shader.
+                let (atlas_x, atlas_y, atlas_w, atlas_h) = block_config.get_texture_coordinates("grass", "side");
+                self.shader_program.set_int(&CString::new("blockType").unwrap(), 0); // You can use an index or enum for block types
+                self.shader_program.set_float(&CString::new("atlasX").unwrap(), atlas_x);
+                self.shader_program.set_float(&CString::new("atlasY").unwrap(), atlas_y);
+                self.shader_program.set_float(&CString::new("atlasW").unwrap(), atlas_w);
+                self.shader_program.set_float(&CString::new("atlasH").unwrap(), atlas_h);
+            }
         }
 
         // "settings"
@@ -75,7 +86,7 @@ impl Renderer {
 
             // bind textures on corresponding texture units
             gl::ActiveTexture(gl::TEXTURE0);
-            gl::BindTexture(gl::TEXTURE_2D, self.texture1.id);
+            gl::BindTexture(gl::TEXTURE_2D, self.block_atlas.id);
 
             // pass to the shaders
             self.shader_program.set_mat4(&CString::new("projection").unwrap(), &projection);
@@ -96,6 +107,7 @@ impl Renderer {
         }
     }
 
+    //related to the vertex shader
     unsafe fn define_attrib_pointers(&self, stride : GLsizei) {
         let pos_attr_location = gl::GetAttribLocation(
             self.shader_program.id,

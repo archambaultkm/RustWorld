@@ -8,6 +8,7 @@ mod world;
 mod renderer;
 mod game;
 mod chunk;
+mod block_config;
 
 use crate::game::Game;
 
