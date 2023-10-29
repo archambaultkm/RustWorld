@@ -42,16 +42,14 @@ impl Renderer {
             gl::GenVertexArrays(1, &mut self.vao);
             gl::BindVertexArray(self.vao);
 
-            for chunk in world.chunks {
-                for column in chunk.columns {
-                    for cube in column.cubes {
-                        // Generate and bind vertex buffer object (VBO)
-                        define_buffer(
-                            gl::ARRAY_BUFFER,
-                            &cube.vertices,
-                            gl::STATIC_DRAW
-                        );
-                    }
+            for chunk in &world.chunks {
+                for cube in &chunk.cubes {
+                    // Generate and bind vertex buffer object (VBO)
+                    define_buffer(
+                        gl::ARRAY_BUFFER,
+                        &cube.vertices,
+                        gl::STATIC_DRAW
+                    );
                 }
             }
 
@@ -69,7 +67,7 @@ impl Renderer {
 
             if let Ok(block_config) = load_block_config() {
                 // TODO needs to apply to all texture types/ sides- handle in the fragment shader.
-                let (atlas_x, atlas_y, atlas_w, atlas_h) = block_config.get_texture_coordinates("grass", "side");
+                let (atlas_x, atlas_y, atlas_w, atlas_h) = block_config.get_texture_coordinates("grass", "top");
                 self.shader_program.set_int(&CString::new("blockType").unwrap(), 0);
                 self.shader_program.set_float(&CString::new("atlasX").unwrap(), atlas_x);
                 self.shader_program.set_float(&CString::new("atlasY").unwrap(), atlas_y);

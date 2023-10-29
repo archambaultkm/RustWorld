@@ -3,31 +3,21 @@ use crate::creation::chunk::Chunk;
 use crate::game_specs::{CHUNK_SIZE, NUM_CHUNKS};
 
 pub struct World {
-    pub chunks : Vec<Chunk>,
-    pub cube_positions : Vec<Vector3<f32>>
+    pub chunks : Vec<Chunk>
 }
 
 impl World {
     pub fn new() -> Self {
         let mut chunks = Vec::new();
 
-        for i in 0..NUM_CHUNKS {
-            chunks.push(Chunk::new(i as f32 *CHUNK_SIZE as f32, i as f32));
-        }
-
-        let mut cube_positions = Vec::new();
-
-        for chunk in &chunks {
-            for column in &chunk.columns {
-                for cube in &column.cubes {
-                    cube_positions.push(cube.position);
-                }
+        for x in 0..NUM_CHUNKS {
+            for z in 0..NUM_CHUNKS {
+                chunks.push(Chunk::generate(Vector3::new(x as f32, -1.0, z as f32)));
             }
         }
 
         World {
-            chunks,
-            cube_positions
+            chunks
         }
     }
 }

@@ -1,7 +1,6 @@
 use cgmath::{Deg, InnerSpace, Matrix4, perspective, vec3, Vector3};
 use glutin::event_loop::{ControlFlow, EventLoop};
 use crate::core::game_window::GameWindow;
-use crate::creation::cube::CubeType;
 use crate::creation::cube::CubeType::GRASS;
 use crate::rendering::renderer::Renderer;
 use crate::creation::world::World;
@@ -23,7 +22,16 @@ impl Game {
         gl::load_with(|symbol| window.context.get_proc_address(symbol) as *const _);
 
         let world = World::new();
-        let cube_positions = world.cube_positions.clone();
+        // let cube_positions = world.cube_positions.clone();
+        let mut cube_positions = Vec::new();
+
+        for chunk in &world.chunks {
+            for cube in &chunk.cubes {
+                if !cube.is_blocked(chunk) {
+                    cube_positions.push(cube.position);
+                }
+            }
+        }
 
         let mut renderer = Renderer::new();
         renderer.init_renderer(world);

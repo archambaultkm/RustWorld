@@ -4,63 +4,38 @@ use crate::creation::cube::Cube;
 use crate::creation::cube::CubeType::{AIR, GRASS, STONE};
 use crate::game_specs::{CHUNK_SIZE, MAX_CHUNK_HEIGHT};
 
-pub struct ChunkColumn {
-    x_location : f32,
-    z_location : f32,
-    pub cubes : Vec<Cube>
-}
-
-impl ChunkColumn {
-    fn new(x_location : f32, z_location : f32) -> Self {
-
-        let mut cubes : Vec<Cube> = Vec::new();
-
-        for i in 0..MAX_CHUNK_HEIGHT {
-            // determine what kind of cube to push based on depth
-            if i > MAX_CHUNK_HEIGHT/2 {
-                cubes.push(
-                    Cube::new(Vector3::new(x_location, i as f32, z_location), AIR)
-                );
-            } else if i <= MAX_CHUNK_HEIGHT/2 {
-                cubes.push(
-                    Cube::new(Vector3::new(x_location, i as f32, z_location), STONE)
-                );
-            }
-        }
-
-        ChunkColumn {
-            x_location,
-            z_location,
-            cubes
-        }
-    }
-}
-
-//one chunk is a 16x16 of columns
 pub struct Chunk {
-    x_origin : f32,
-    z_origin : f32,
-    pub columns : Vec<ChunkColumn>,
+    position : Vector3<f32>,
+    pub cubes : Vec<Cube>,
 }
 
 impl Chunk {
-    pub fn new(x_origin : f32, z_origin : f32) -> Self {
+    pub fn generate(position : Vector3<f32>) -> Self {
 
-        let mut columns = Vec::new();
+        // TODO add noise stuff here
 
-        let x = x_origin;
-        let z = z_origin;
+        let mut cubes = Vec::new();
 
-        for i in 0..CHUNK_SIZE {
-            for j in 0..CHUNK_SIZE {
-                columns.push(ChunkColumn::new(i as f32 + x, j  as f32 + z));
+        for x in 0..CHUNK_SIZE + 1 {
+            for y in 0..MAX_CHUNK_HEIGHT + 1 {
+                for z in 0..CHUNK_SIZE + 1 {
+                    cubes.push(Cube::new(Vector3::new(
+                        position.x * CHUNK_SIZE as f32 + x as f32,
+                        position.y * MAX_CHUNK_HEIGHT as f32 + y as f32,
+                        position.z * CHUNK_SIZE as f32 + z as f32
+                    ), AIR)); //todo figure out how you're doing block types
+                }
             }
         }
 
         Chunk {
-            x_origin,
-            z_origin,
-            columns
+            position,
+            cubes
         }
+    }
+
+    pub fn has_cube(&self, cube_position : Vector3<f32>) -> bool {
+        //todo super inefficient
+        return self.cubes.iter().any( |cube| cube.position == cube_position);
     }
 }
