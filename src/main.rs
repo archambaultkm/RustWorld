@@ -1,18 +1,10 @@
-mod shader;
-mod camera;
-mod game_window;
-mod cube;
-mod texture;
 mod game_specs;
-mod world;
-mod renderer;
-mod game;
-mod chunk;
-mod block_config;
+mod core;
+mod creation;
+mod rendering;
 
-use crate::game::Game;
+use crate::core::game::Game;
 
 fn main() {
-    let game = Game::new();
-    game.run();
+    Game::run(&Game::new());
 }

@@ -7,7 +7,7 @@ use glutin::event_loop::{ControlFlow, EventLoop};
 use glutin::window::{Window, WindowBuilder};
 use RustWorld::polygon_mode;
 use RustWorld::PolygonMode::{Fill, Line};
-use crate::camera::{Camera, Camera_Movement::*, Point3};
+use RustWorld::camera::{Camera, Camera_Movement::*, Point3};
 
 pub struct GameWindow {
     event_loop : EventLoop<()>,

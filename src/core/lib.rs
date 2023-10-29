@@ -1,6 +1,6 @@
 use gl::types::GLenum;
-use glutin::event::{ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent};
-use glutin::event_loop::ControlFlow;
+
+pub mod camera;
 
 // code found: https://rust-tutorials.github.io/learn-opengl/basics/003-rectangle.html
 /// The polygon display modes you can set.
