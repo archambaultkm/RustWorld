@@ -1,6 +1,5 @@
-use std::char::MAX;
-use cgmath::Vector3;
-use crate::creation::cube::Cube;
+use cgmath::{Vector2, Vector3};
+use crate::creation::cube::{Cube, CubeType};
 use crate::creation::cube::CubeType::{AIR, GRASS, STONE};
 use crate::game_specs::{CHUNK_SIZE, MAX_CHUNK_HEIGHT};
 
@@ -34,8 +33,16 @@ impl Chunk {
         }
     }
 
+    // check if this chunk contains a cube at the given position
     pub fn has_cube(&self, cube_position : Vector3<f32>) -> bool {
         //todo super inefficient
         return self.cubes.iter().any( |cube| cube.position == cube_position);
     }
+
+    pub fn at(&self, cube_position : Vector3<f32>) -> CubeType {
+        let cube = self.cubes.iter().find(|cube| cube_position == cube.position);
+
+        return cube.unwrap()._type;
+    }
+
 }

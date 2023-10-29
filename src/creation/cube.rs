@@ -1,8 +1,9 @@
-use cgmath::{vec3, Vector3};
+use cgmath::{vec3, Vector2, Vector3};
 use crate::creation::chunk::Chunk;
+use crate::game_specs::CHUNK_SIZE;
 
 // each cube type is also assigned a number for passing to the fragment shader in chunk.rs
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 pub enum CubeType {
     AIR = 0,
     GRASS = 1,
