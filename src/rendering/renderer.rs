@@ -2,12 +2,12 @@ use std::ffi::CString;
 use std::mem;
 use cgmath::{Matrix4};
 use gl::types::{GLenum, GLfloat, GLsizei, GLuint};
-use RustWorld::{polygon_mode};
-use crate::block_config::{load_block_config};
+use crate::core::lib::{polygon_mode};
+use crate::creation::block_config::{load_block_config};
 use crate::game_specs::POLYGON_MODE;
-use crate::shader::Shader;
-use crate::texture::Texture;
-use crate::world::World;
+use crate::rendering::shader::Shader;
+use crate::rendering::texture::Texture;
+use crate::creation::world::World;
 
 pub struct Renderer {
     shader_program : Shader,

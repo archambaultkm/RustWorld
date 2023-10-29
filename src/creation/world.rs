@@ -1,6 +1,6 @@
 use cgmath::Vector3;
-use crate::chunk::Chunk;
-use crate::cube::Cube;
+use crate::creation::chunk::Chunk;
+use crate::creation::cube::Cube;
 use crate::game_specs::{CHUNK_SIZE, NUM_CHUNKS};
 
 pub struct World {

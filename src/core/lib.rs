@@ -1,7 +1,5 @@
 use gl::types::GLenum;
 
-pub mod camera;
-
 // code found: https://rust-tutorials.github.io/learn-opengl/basics/003-rectangle.html
 /// The polygon display modes you can set.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

@@ -1,5 +1,5 @@
 use cgmath::Vector3;
-use crate::cube::Cube;
+use crate::creation::cube::Cube;
 use crate::game_specs::{CHUNK_SIZE, MAX_CHUNK_HEIGHT};
 
 pub struct ChunkColumn {

@@ -5,9 +5,9 @@ use glutin::dpi::LogicalSize;
 use glutin::event::{ElementState, Event, KeyboardInput, VirtualKeyCode, WindowEvent};
 use glutin::event_loop::{ControlFlow, EventLoop};
 use glutin::window::{Window, WindowBuilder};
-use RustWorld::polygon_mode;
-use RustWorld::PolygonMode::{Fill, Line};
-use RustWorld::camera::{Camera, Camera_Movement::*, Point3};
+use crate::core::lib::polygon_mode;
+use crate::core::lib::PolygonMode::{Fill, Line};
+use crate::core::camera::{Camera, Camera_Movement::*, Point3};
 
 pub struct GameWindow {
     event_loop : EventLoop<()>,

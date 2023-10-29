@@ -1,5 +1,5 @@
-use RustWorld::PolygonMode;
-use RustWorld::PolygonMode::*;
+use crate::core::lib::PolygonMode;
+use crate::core::lib::PolygonMode::*;
 
 pub const TITLE : &str = "RustWorld";
 
