@@ -1,5 +1,7 @@
+use std::char::MAX;
 use cgmath::Vector3;
 use crate::creation::cube::Cube;
+use crate::creation::cube::CubeType::{AIR, GRASS, STONE};
 use crate::game_specs::{CHUNK_SIZE, MAX_CHUNK_HEIGHT};
 
 pub struct ChunkColumn {
@@ -14,9 +16,16 @@ impl ChunkColumn {
         let mut cubes : Vec<Cube> = Vec::new();
 
         for i in 0..MAX_CHUNK_HEIGHT {
-            cubes.push(
-                Cube::new(Vector3::new(x_location, i as f32, z_location), None)
-            );
+            // determine what kind of cube to push based on depth
+            if i > MAX_CHUNK_HEIGHT/2 {
+                cubes.push(
+                    Cube::new(Vector3::new(x_location, i as f32, z_location), AIR)
+                );
+            } else if i <= MAX_CHUNK_HEIGHT/2 {
+                cubes.push(
+                    Cube::new(Vector3::new(x_location, i as f32, z_location), STONE)
+                );
+            }
         }
 
         ChunkColumn {
@@ -32,7 +41,6 @@ pub struct Chunk {
     x_origin : f32,
     z_origin : f32,
     pub columns : Vec<ChunkColumn>,
-    //columns : [[ChunkColumn; CHUNK_SIZE] ; CHUNK_SIZE]
 }
 
 impl Chunk {

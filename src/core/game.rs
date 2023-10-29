@@ -1,6 +1,8 @@
 use cgmath::{Deg, InnerSpace, Matrix4, perspective, vec3, Vector3};
 use glutin::event_loop::{ControlFlow, EventLoop};
 use crate::core::game_window::GameWindow;
+use crate::creation::cube::CubeType;
+use crate::creation::cube::CubeType::GRASS;
 use crate::rendering::renderer::Renderer;
 use crate::creation::world::World;
 
@@ -55,9 +57,10 @@ impl Game {
 
             let view: Matrix4<f32> = window.camera.get_view_matrix();
 
-            let mut models = Vec::new();
+            let mut models = (Vec::new(), Vec::new());
             for i in 0..cube_positions.len() {
-                models.push(update_model(&cube_positions[i]));
+                models.0.push(update_model(&cube_positions[i]));
+                models.1.push(GRASS); // TODO just putting a hard value for now
             }
 
             // render

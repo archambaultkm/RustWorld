@@ -54,6 +54,7 @@ impl GameWindow {
             last_y,
         }
     }
+
     pub fn process_events(&mut self,
                           event : Event<()>,
                           delta_time : f32,

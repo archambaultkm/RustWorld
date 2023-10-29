@@ -1,10 +1,12 @@
 use std::ffi::CString;
 use std::mem;
-use cgmath::{Matrix4};
+use cgmath::{Matrix4, Vector3, Vector4};
 use gl::types::{GLenum, GLfloat, GLsizei, GLuint};
 use crate::core::lib::{polygon_mode};
 use crate::creation::block_config::{load_block_config};
-use crate::game_specs::POLYGON_MODE;
+use crate::creation::cube::{Cube, CubeType};
+use crate::creation::cube::CubeType::AIR;
+use crate::game_specs::{CHUNK_SIZE, POLYGON_MODE};
 use crate::rendering::shader::Shader;
 use crate::rendering::texture::Texture;
 use crate::creation::world::World;
@@ -19,7 +21,6 @@ impl Renderer {
 
     pub fn new() -> Self {
 
-        //TODO shouldn't be hard coded
         let shader_program = Shader::new("shaders/shader.vert", "shaders/shader.frag");
         let block_atlas = unsafe { Texture::new("resources/textures/spritesheet.png", true) };
 
@@ -62,10 +63,14 @@ impl Renderer {
             //assign shader sampler to texture unit
             self.shader_program.set_int(&CString::new("blockAtlas").unwrap(), 0);
 
+            // only ever using one texture
+            gl::ActiveTexture(gl::TEXTURE0);
+            gl::BindTexture(gl::TEXTURE_2D, self.block_atlas.id);
+
             if let Ok(block_config) = load_block_config() {
                 // TODO needs to apply to all texture types/ sides- handle in the fragment shader.
                 let (atlas_x, atlas_y, atlas_w, atlas_h) = block_config.get_texture_coordinates("grass", "side");
-                self.shader_program.set_int(&CString::new("blockType").unwrap(), 0); // You can use an index or enum for block types
+                self.shader_program.set_int(&CString::new("blockType").unwrap(), 0);
                 self.shader_program.set_float(&CString::new("atlasX").unwrap(), atlas_x);
                 self.shader_program.set_float(&CString::new("atlasY").unwrap(), atlas_y);
                 self.shader_program.set_float(&CString::new("atlasW").unwrap(), atlas_w);
@@ -79,15 +84,11 @@ impl Renderer {
     }
 
     // called from game window loop
-    pub fn render(&mut self, projection : Matrix4<f32>, view : Matrix4<f32>, models : Vec<Matrix4<f32>>) {
+    pub fn render(&mut self, projection : Matrix4<f32>, view : Matrix4<f32>, models : (Vec<Matrix4<f32>>, Vec<CubeType>) ) {
         // render
         unsafe {
-            // window background colour
+            // clear buffers
             gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
-
-            // bind textures on corresponding texture units
-            gl::ActiveTexture(gl::TEXTURE0);
-            gl::BindTexture(gl::TEXTURE_2D, self.block_atlas.id);
 
             // pass to the shaders
             self.shader_program.set_mat4(&CString::new("projection").unwrap(), &projection);
@@ -96,8 +97,10 @@ impl Renderer {
             // draw
             gl::BindVertexArray(self.vao);
 
-            for model in models {
-                self.shader_program.set_mat4(&CString::new("model").unwrap(), &model);
+            for i in 0..models.0.len() {
+
+                self.shader_program.set_mat4(&CString::new("model").unwrap(), &models.0[i]);
+                self.shader_program.set_int(&CString::new("blockType").unwrap(), models.1[i] as i32);
 
                 gl::DrawArrays(
                     gl::TRIANGLES,
@@ -160,4 +163,3 @@ fn define_buffer<T>(target: GLenum, array : &[T], draw_type : GLenum) -> GLuint 
 
     buffer_object
 }
-

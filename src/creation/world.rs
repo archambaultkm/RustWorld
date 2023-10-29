@@ -1,6 +1,5 @@
 use cgmath::Vector3;
 use crate::creation::chunk::Chunk;
-use crate::creation::cube::Cube;
 use crate::game_specs::{CHUNK_SIZE, NUM_CHUNKS};
 
 pub struct World {
@@ -10,11 +9,10 @@ pub struct World {
 
 impl World {
     pub fn new() -> Self {
-        //let cube = Cube::new(Vector3::new(0.0, 0.0, 0.0), );
         let mut chunks = Vec::new();
-        // TODO just trying to get one to work
+
         for i in 0..NUM_CHUNKS {
-            chunks.push(Chunk::new(i as f32 *CHUNK_SIZE as f32, 0.0));
+            chunks.push(Chunk::new(i as f32 *CHUNK_SIZE as f32, i as f32));
         }
 
         let mut cube_positions = Vec::new();
