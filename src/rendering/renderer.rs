@@ -3,7 +3,6 @@ use std::mem;
 use cgmath::{Matrix4, Vector3, Vector4};
 use gl::types::{GLenum, GLfloat, GLsizei, GLuint};
 use crate::core::lib::{polygon_mode};
-use crate::creation::block_config::{load_block_config};
 use crate::creation::cube::{Cube, CubeType};
 use crate::creation::cube::CubeType::AIR;
 use crate::game_specs::{CHUNK_SIZE, POLYGON_MODE};
@@ -54,7 +53,6 @@ impl Renderer {
             }
 
             // define attribute pointers
-            //TODO hard-coding stride size for now
             let stride = (5 * mem::size_of::<GLfloat>()) as GLsizei;
             self.define_attrib_pointers(stride);
 
@@ -86,7 +84,10 @@ impl Renderer {
             gl::BindVertexArray(self.vao);
 
             for i in 0..models.0.len() {
-                self.shader_program.set_mat4(&CString::new("model").unwrap(), &models.0[i]);
+                // only send model to renderer if it isn't air
+                if *models.1[i] != AIR {
+                    self.shader_program.set_mat4(&CString::new("model").unwrap(), &models.0[i]);
+                }
 
                 // send block type information to fragment shader
                 match models.1[i]  {
