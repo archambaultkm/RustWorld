@@ -86,14 +86,10 @@ impl Renderer {
             gl::BindVertexArray(self.vao);
 
             for i in 0..models.0.len() {
-
                 self.shader_program.set_mat4(&CString::new("model").unwrap(), &models.0[i]);
 
                 // send block type information to fragment shader
                 match models.1[i]  {
-                    CubeType::AIR => {
-                        self.shader_program.set_int(&CString::new("blockType").unwrap(), 0);
-                    }
                     CubeType::GRASS => {
                         self.shader_program.set_int(&CString::new("blockType").unwrap(), 1);
                     }
@@ -103,6 +99,7 @@ impl Renderer {
                     CubeType::STONE => {
                         self.shader_program.set_int(&CString::new("blockType").unwrap(), 3);
                     }
+                    _ => {} // this is here to catch AIR, we don't want anything to render in that case
                 }
 
                 // draw objects

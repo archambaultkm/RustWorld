@@ -17,10 +17,10 @@ void main() {
     // Determine the offset and size of the block's texture in the atlas based on blockType.
     switch (blockType) {
         case 0: // AIR
-        atlasX = 325; // set to stone rn
-        atlasY = 1;
-        atlasW = 160;
-        atlasH = 160;
+        //atlasX = 325; // set to stone rn
+        //atlasY = 1;
+        //atlasW = 160;
+        //atlasH = 160;
         break;
 
         case 1: // GRASS

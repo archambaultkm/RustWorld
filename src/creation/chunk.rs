@@ -31,11 +31,6 @@ impl Chunk {
             }
         }
 
-        // // TODO testing...set random cubes
-        // for mut cube in cubes {
-        //     cube._type = CubeType::random();
-        // }
-
         Chunk {
             position,
             cubes

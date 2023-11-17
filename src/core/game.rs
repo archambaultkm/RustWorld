@@ -1,7 +1,6 @@
 use cgmath::{Deg, InnerSpace, Matrix4, perspective, vec3, Vector3};
 use glutin::event_loop::{ControlFlow, EventLoop};
 use crate::core::game_window::GameWindow;
-use crate::creation::cube::CubeType::GRASS;
 use crate::rendering::renderer::Renderer;
 use crate::creation::world::World;
 
