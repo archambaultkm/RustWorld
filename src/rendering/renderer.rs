@@ -64,16 +64,6 @@ impl Renderer {
             // only ever using one texture
             gl::ActiveTexture(gl::TEXTURE0);
             gl::BindTexture(gl::TEXTURE_2D, self.block_atlas.id);
-
-            if let Ok(block_config) = load_block_config() {
-                // TODO needs to apply to all texture types/ sides- handle in the fragment shader.
-                let (atlas_x, atlas_y, atlas_w, atlas_h) = block_config.get_texture_coordinates("grass", "top");
-                self.shader_program.set_int(&CString::new("blockType").unwrap(), 0);
-                self.shader_program.set_float(&CString::new("atlasX").unwrap(), atlas_x);
-                self.shader_program.set_float(&CString::new("atlasY").unwrap(), atlas_y);
-                self.shader_program.set_float(&CString::new("atlasW").unwrap(), atlas_w);
-                self.shader_program.set_float(&CString::new("atlasH").unwrap(), atlas_h);
-            }
         }
 
         // "settings"
@@ -82,7 +72,7 @@ impl Renderer {
     }
 
     // called from game window loop
-    pub fn render(&mut self, projection : Matrix4<f32>, view : Matrix4<f32>, models : (Vec<Matrix4<f32>>, Vec<CubeType>) ) {
+    pub fn render(&mut self, projection : Matrix4<f32>, view : Matrix4<f32>, models : (Vec<Matrix4<f32>>, Vec<&CubeType>)) {
         // render
         unsafe {
             // clear buffers
@@ -98,8 +88,24 @@ impl Renderer {
             for i in 0..models.0.len() {
 
                 self.shader_program.set_mat4(&CString::new("model").unwrap(), &models.0[i]);
-                self.shader_program.set_int(&CString::new("blockType").unwrap(), models.1[i] as i32);
 
+                // send block type information to fragment shader
+                match models.1[i]  {
+                    CubeType::AIR => {
+                        self.shader_program.set_int(&CString::new("blockType").unwrap(), 0);
+                    }
+                    CubeType::GRASS => {
+                        self.shader_program.set_int(&CString::new("blockType").unwrap(), 1);
+                    }
+                    CubeType::DIRT => {
+                        self.shader_program.set_int(&CString::new("blockType").unwrap(), 2);
+                    }
+                    CubeType::STONE => {
+                        self.shader_program.set_int(&CString::new("blockType").unwrap(), 3);
+                    }
+                }
+
+                // draw objects
                 gl::DrawArrays(
                     gl::TRIANGLES,
                     0,

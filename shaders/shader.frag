@@ -3,20 +3,49 @@
 out vec4 fragColour;
 
 in vec2 texCoord; // Texture coordinates for the cube
-uniform float atlasX;
-uniform float atlasY;
-uniform float atlasW;
-uniform float atlasH;
+uniform int blockType; // Type of block
 uniform sampler2D blockAtlas; // Texture atlas containing multiple cube textures
-uniform int blockType; // Type of block (dirt, stone, etc.) // TODO handle control flow on block types in here probably
 
 const vec2 atlasSize = vec2(322.0 , 486.0);
 
+float atlasX;
+float atlasY;
+float atlasH;
+float atlasW;
+
 void main() {
     // Determine the offset and size of the block's texture in the atlas based on blockType.
-    // This could be done with conditional statements or a lookup table.
-    // TODO handle control flow on block types in here probably
+    switch (blockType) {
+        case 0: // AIR
+        atlasX = 325; // set to stone rn
+        atlasY = 1;
+        atlasW = 160;
+        atlasH = 160;
+        break;
 
+        case 1: // GRASS
+        atlasX = 163;
+        atlasY = 163;
+        atlasW = 160;
+        atlasH = 158;
+        break;
+
+        case 2: // STONE
+        atlasX = 325;
+        atlasY = 1;
+        atlasW = 160;
+        atlasH = 160;
+        break;
+
+        case 3: // DIRT
+        atlasX = 1;
+        atlasY = 1;
+        atlasW = 160;
+        atlasH = 161;
+        break;
+    }
+
+    // calculate the coordinates of the texture in the atlas
     vec4 blockCoords = vec4(atlasX/atlasSize.y, atlasY/atlasSize.x, atlasW/atlasSize.y, atlasH/atlasSize.x);
 
     // Sample the appropriate region of the atlas using adjusted texture coordinates.

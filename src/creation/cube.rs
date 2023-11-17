@@ -1,4 +1,5 @@
 use cgmath::{vec3, Vector2, Vector3};
+use rand::Rng;
 use crate::creation::chunk::Chunk;
 use crate::game_specs::CHUNK_SIZE;
 
@@ -10,6 +11,24 @@ pub enum CubeType {
     DIRT = 2,
     STONE = 3
 }
+
+impl CubeType {
+    pub(crate) fn random() -> CubeType {
+        // Generate a random number between 0 and 3 for the existing cube types
+        let random_number = rand::thread_rng().gen_range(0, 4);
+
+        // Match the random number to a variant
+        match random_number {
+            0 => CubeType::AIR,
+            1 => CubeType::GRASS,
+            2 => CubeType::DIRT,
+            3 => CubeType::STONE,
+            _ => unreachable!(), // This should never happen
+        }
+    }
+}
+
+
 
 pub struct Cube {
     pub _type : CubeType,
@@ -57,6 +76,10 @@ impl Cube {
         if num_neighbors == 6 {return true};
 
         return false;
+    }
+
+    pub fn set_type(&mut self, type_ : CubeType) {
+        self._type = type_;
     }
 }
 

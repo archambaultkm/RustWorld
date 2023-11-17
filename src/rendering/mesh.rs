@@ -3,6 +3,7 @@ use std::{mem, ptr};
 use std::mem::{size_of};
 use cgmath::{Vector2, Vector3, Zero};
 use gl::types::{GLfloat, GLsizei, GLuint};
+use crate::creation::world::World;
 use crate::rendering::shader::Shader;
 use crate::rendering::texture::Texture;
 
@@ -26,11 +27,13 @@ pub struct Mesh {
     pub vertices : Vec<Vertex>,
     pub indices : Vec<u32>,
     pub texture : Texture,
+
+    // TODO probably keep this outta here
     pub VAO : u32,
 
     // for rendering
-    VBO : u32,
-    EBO : u32
+    pub(crate) VBO : u32,
+    pub(crate) EBO : u32
 }
 
 impl Mesh {

@@ -11,6 +11,7 @@ dependencies = [
  "glutin",
  "image",
  "noise",
+ "rand",
  "serde",
  "serde_json",
 ]
