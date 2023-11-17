@@ -1,11 +1,10 @@
 use std::ffi::CString;
 use std::mem;
-use cgmath::{Matrix4, Vector3, Vector4};
+use cgmath::{Matrix4};
 use gl::types::{GLenum, GLfloat, GLsizei, GLuint};
 use crate::core::lib::{polygon_mode};
-use crate::creation::cube::{Cube, CubeType};
-use crate::creation::cube::CubeType::AIR;
-use crate::game_specs::{CHUNK_SIZE, POLYGON_MODE};
+use crate::creation::cube::{CubeType};
+use crate::game_specs::{POLYGON_MODE};
 use crate::rendering::shader::Shader;
 use crate::rendering::texture::Texture;
 use crate::creation::world::World;
@@ -85,7 +84,7 @@ impl Renderer {
 
             for i in 0..models.0.len() {
                 // only send model to renderer if it isn't air
-                if *models.1[i] != AIR {
+                if *models.1[i] != CubeType::AIR {
                     self.shader_program.set_mat4(&CString::new("model").unwrap(), &models.0[i]);
                 }
 
@@ -94,13 +93,14 @@ impl Renderer {
                     CubeType::GRASS => {
                         self.shader_program.set_int(&CString::new("blockType").unwrap(), 1);
                     }
-                    CubeType::DIRT => {
+                    CubeType::STONE => {
                         self.shader_program.set_int(&CString::new("blockType").unwrap(), 2);
                     }
-                    CubeType::STONE => {
+                    CubeType::DIRT => {
                         self.shader_program.set_int(&CString::new("blockType").unwrap(), 3);
                     }
-                    _ => {} // this is here to catch AIR, we don't want anything to render in that case
+                     // we don't want anything to render for air
+                    _ => {}
                 }
 
                 // draw objects

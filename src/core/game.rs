@@ -21,7 +21,7 @@ impl Game {
         gl::load_with(|symbol| window.context.get_proc_address(symbol) as *const _);
 
         let world = World::new();
-        // let cube_positions = world.cube_positions.clone();
+
         let mut cube_positions = Vec::new();
         let mut cube_types = Vec::new();
 
@@ -69,7 +69,7 @@ impl Game {
             let mut models = (Vec::new(), Vec::new());
             for i in 0..cube_positions.len() {
                 models.0.push(update_model(&cube_positions[i]));
-                models.1.push(&cube_types[i]); // TODO just putting a hard value for now
+                models.1.push(&cube_types[i]);
             }
 
             // render
