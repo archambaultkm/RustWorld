@@ -27,10 +27,10 @@ impl Game {
 
         for chunk in &world.chunks {
             for cube in &chunk.cubes {
-                if !cube.is_blocked(chunk) {
+                //if !cube.is_blocked(chunk) {
                     cube_positions.push(cube.position);
                     cube_types.push(cube._type);
-                }
+                //}
             }
         }
 

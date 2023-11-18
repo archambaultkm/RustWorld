@@ -12,6 +12,13 @@ pub struct Chunk {
 }
 
 impl Chunk {
+    pub fn new(position : Vector3<f32>, cubes : Vec<Cube>) -> Self {
+        Chunk {
+            position,
+            cubes
+        }
+    }
+
     pub fn generate(position : Vector3<f32>) -> Self {
 
         // Generate a random seed
@@ -32,23 +39,31 @@ impl Chunk {
 
                     let noise_value = perlin.get([x_noise as f64, y_noise as f64, z_noise as f64]);
 
-                    println!("{}", noise_value); // TODO for debugging
+                    //println!("{}", noise_value); // TODO for debugging
+                    println!("{}", y_noise * 50.0); // TODO for debugging
 
-                    let cube_type = determine_cube_type(noise_value);
-
-                    cubes.push(Cube::new(Vector3::new(
+                    let cube_position = Vector3::new(
                         position.x * CHUNK_SIZE as f32 + x as f32,
                         position.y * MAX_CHUNK_HEIGHT as f32 + y as f32,
                         position.z * CHUNK_SIZE as f32 + z as f32
-                    ), cube_type));
+                    );
+
+                    let cube_type = determine_cube_type(noise_value, cube_position);
+
+                    cubes.push(Cube::new(cube_position, cube_type));
                 }
             }
         }
 
-        Chunk {
-            position,
-            cubes
-        }
+         let this = Chunk::new(position, cubes);
+        //
+        // for mut cube in cubes.iter().clone() {
+        //     if cube.is_blocked(&this) {
+        //         cube.set_type(CubeType::AIR);
+        //     }
+        // }
+
+        this
     }
 
     // check if this chunk contains a cube at the given position
@@ -66,20 +81,23 @@ impl Chunk {
 
     // set cube
     pub fn set(&self, position : Vector3<f32>, _type : CubeType) {
-        //self.cubes[]
+        let mut cube = self.cubes.iter().find(|cube| position == cube.position);
+        //cube.set_type(_type); todo error
     }
 }
 
 //todo move to cube probably
-fn determine_cube_type(noise_value: f64) -> CubeType {
+fn determine_cube_type(noise_value: f64, position: Vector3<f32>) -> CubeType {
     // TODO adjust
-    if noise_value <= 0.25 && noise_value > 0.15 {
-        CubeType::GRASS
-    } else if noise_value > 0.0 && noise_value < 0.15 {
-        CubeType::DIRT
-    } else if noise_value < 0.0 {
-        CubeType::STONE
+    if noise_value >= 0.0 {
+        if position.y < -10.0 {
+            CubeType::STONE
+        } else if position.y < 0.0 {
+            CubeType::DIRT
+        } else {
+            CubeType::GRASS
+        }
     } else {
-       CubeType::AIR
+        CubeType::AIR
     }
 }

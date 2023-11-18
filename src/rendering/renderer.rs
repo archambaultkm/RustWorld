@@ -64,7 +64,7 @@ impl Renderer {
         }
 
         // "settings"
-        unsafe { gl::ClearColor(0.7, 0.7, 0.8, 1.0); }
+        unsafe { gl::ClearColor(0.65, 0.7, 0.9, 1.0); }
         polygon_mode(POLYGON_MODE);
     }
 
