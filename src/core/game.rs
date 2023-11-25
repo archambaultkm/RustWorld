@@ -3,6 +3,7 @@ use glutin::event_loop::{ControlFlow, EventLoop};
 use crate::core::game_window::GameWindow;
 use crate::rendering::renderer::Renderer;
 use crate::creation::world::World;
+use crate::game_specs::{CHUNK_SIZE, MAX_CHUNK_HEIGHT};
 
 pub struct Game { }
 
@@ -13,24 +14,24 @@ impl Game {
 
     pub fn run(&self) {
         // Initialize the event loop and window builder
-        //the event loop handles events such as keyboard and mouse input, window resizing, and more.
+        // the event loop handles events such as keyboard and mouse input, window resizing, and more.
         let event_loop = EventLoop::new();
         let mut window = GameWindow::new();
 
         // Initialize OpenGL (make opengl functions available within the program)
         gl::load_with(|symbol| window.context.get_proc_address(symbol) as *const _);
 
-        let world = World::new();
+        let mut world = World::new();
 
         let mut cube_positions = Vec::new();
         let mut cube_types = Vec::new();
 
         for chunk in &world.chunks {
             for cube in &chunk.cubes {
-                //if !cube.is_blocked(chunk) {
+                if !cube.is_blocked(chunk) {
                     cube_positions.push(cube.position);
                     cube_types.push(cube._type);
-                //}
+                }
             }
         }
 
@@ -56,7 +57,7 @@ impl Game {
             // events
             window.process_events(event, delta_time, control_flow);
 
-            // update projectin, view, model matrices
+            // update projection, view, model matrices
             let projection: Matrix4<f32> = perspective(
                 Deg(window.camera.zoom),
                 16.0 / 9.0,

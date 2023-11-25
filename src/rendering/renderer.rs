@@ -16,7 +16,6 @@ pub struct Renderer {
 }
 
 impl Renderer {
-
     pub fn new() -> Self {
 
         let shader_program = Shader::new("shaders/shader.vert", "shaders/shader.frag");
@@ -64,7 +63,7 @@ impl Renderer {
         }
 
         // "settings"
-        unsafe { gl::ClearColor(0.65, 0.7, 0.9, 1.0); }
+        unsafe { gl::ClearColor(0.60, 0.7, 0.9, 1.0); }
         polygon_mode(POLYGON_MODE);
     }
 
@@ -113,7 +112,6 @@ impl Renderer {
         }
     }
 
-    //related to the vertex shader
     unsafe fn define_attrib_pointers(&self, stride : GLsizei) {
         let pos_attr_location = gl::GetAttribLocation(
             self.shader_program.id,

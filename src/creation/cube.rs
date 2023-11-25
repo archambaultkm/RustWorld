@@ -27,8 +27,7 @@ impl CubeType {
     }
 }
 
-
-
+#[derive(Clone)]
 pub struct Cube {
     pub _type : CubeType,
     pub vertices : [f32; 180],
@@ -62,12 +61,13 @@ impl Cube {
     }
 
     pub fn is_blocked(&self, chunk : &Chunk) -> bool {
-
         let mut num_neighbors = 0;
 
         for neighbor in self.direct_neighbors() {
             if chunk.has_cube(neighbor) {
-                num_neighbors += 1;
+                if chunk.at(neighbor) != CubeType::AIR {
+                    num_neighbors += 1;
+                }
             }
         }
 
