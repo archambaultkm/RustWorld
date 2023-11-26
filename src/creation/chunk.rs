@@ -1,6 +1,5 @@
 use cgmath::{Vector3};
 use noise::{NoiseFn, OpenSimplex};
-use rand::{Rng};
 use crate::creation::cube::{Cube, CubeType};
 use crate::game_specs::{CHUNK_SIZE, MAX_CHUNK_HEIGHT};
 

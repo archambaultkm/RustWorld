@@ -83,7 +83,6 @@ impl Game {
 
 // TODO this shouldn't be here
 fn update_model(position : &Vector3<f32>) -> Matrix4<f32> {
-
     let mut model: Matrix4<f32> = Matrix4::from_translation(*position); //TODO
     let angle = 0.0;
     model * Matrix4::from_axis_angle(

@@ -3,7 +3,7 @@ use std::mem;
 use cgmath::{Matrix4};
 use gl::types::{GLenum, GLfloat, GLsizei, GLuint};
 use crate::core::lib::{polygon_mode};
-use crate::creation::cube::{CubeType};
+use crate::creation::cube::{Cube, CubeType};
 use crate::game_specs::{POLYGON_MODE};
 use crate::rendering::shader::Shader;
 use crate::rendering::texture::Texture;
@@ -39,16 +39,9 @@ impl Renderer {
             gl::GenVertexArrays(1, &mut self.vao);
             gl::BindVertexArray(self.vao);
 
-            for chunk in &world.chunks {
-                for cube in &chunk.cubes {
-                    // Generate and bind vertex buffer object (VBO)
-                    define_buffer(
-                        gl::ARRAY_BUFFER,
-                        &cube.vertices,
-                        gl::STATIC_DRAW
-                    );
-                }
-            }
+            // the whole world is cubes so the vertex and inex buffers will be the same for everything
+            let vbo = define_buffer(gl::ARRAY_BUFFER, &Cube::VERTICES, gl::STATIC_DRAW);
+            //let ibo = define_buffer(gl::ELEMENT_ARRAY_BUFFER, &Cube::INDICES, gl::STATIC_DRAW); // TODO index buffer doesn't work, I have the order wrong
 
             // define attribute pointers
             let stride = (5 * mem::size_of::<GLfloat>()) as GLsizei;
@@ -78,8 +71,8 @@ impl Renderer {
             self.shader_program.set_mat4(&CString::new("projection").unwrap(), &projection);
             self.shader_program.set_mat4(&CString::new("view").unwrap(), &view);
 
-            // draw
-            gl::BindVertexArray(self.vao);
+            // // draw
+            // gl::BindVertexArray(self.vao);
 
             for i in 0..models.0.len() {
                 // only send model to renderer if it isn't air
@@ -108,6 +101,14 @@ impl Renderer {
                     0,
                     36
                 );
+
+                // TODO reorder the index array so this works
+                // gl::DrawElements(
+                //     gl::TRIANGLES,
+                //     36,
+                //     gl::UNSIGNED_INT,
+                //     std::ptr::null(), // Indices are provided by the bound element array buffer
+                // );
             }
         }
     }
@@ -147,8 +148,8 @@ impl Renderer {
     }
 }
 
-//generate and bind buffer objects for both VBO and EBO
-fn define_buffer<T>(target: GLenum, array : &[T], draw_type : GLenum) -> GLuint {
+// Generate and bind buffer objects for both VBO and IBO
+fn define_buffer<T>(target: GLenum, array: &[T], draw_type: GLenum) -> GLuint {
     let mut buffer_object = 0;
     unsafe {
         gl::GenBuffers(1, &mut buffer_object);
@@ -160,6 +161,5 @@ fn define_buffer<T>(target: GLenum, array : &[T], draw_type : GLenum) -> GLuint 
             draw_type,
         );
     }
-
     buffer_object
 }
