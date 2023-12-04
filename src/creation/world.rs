@@ -44,7 +44,7 @@ impl World {
             let neighbor_chunk_x = self.get_chunk_at(position + Vector3::new(CHUNK_SIZE as f32, 0.0, 0.0));
             let neighbor_chunk_z = self.get_chunk_at(position + Vector3::new(0.0, 0.0, CHUNK_SIZE as f32));
 
-            let chunk = Chunk::generate(position, neighbor_chunk_z, self.world_seed);
+            let chunk = Chunk::generate(position, neighbor_chunk_x, self.world_seed);
             self.chunks.push(chunk);
         }
     }

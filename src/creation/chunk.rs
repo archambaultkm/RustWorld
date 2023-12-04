@@ -1,7 +1,8 @@
 use cgmath::{Vector3};
 use noise::{NoiseFn, OpenSimplex};
-use crate::creation::cube::{Cube, CubeType};
-use crate::game_specs::{CHUNK_SIZE, MAX_CHUNK_HEIGHT};
+use crate::creation::cube::{Cube, CubeType, determine_cube_type};
+use crate::creation::noise::{get_layered_noise, Noise};
+use crate::game_specs::{CHUNK_SIZE, MAX_CHUNK_HEIGHT, MIN_CHUNK_HEIGHT};
 
 #[derive(Clone)]
 pub struct Chunk {
@@ -19,7 +20,7 @@ impl Chunk {
 
     pub fn generate(position: Vector3<f32>, neighbor_chunk: Option<&Chunk>, world_seed : u32) -> Self {
         // Make a new noise generator based on the seed
-        let perlin = OpenSimplex::new(world_seed);
+        let noise = Noise::new(world_seed);
 
         let mut cubes = Vec::new();
 
@@ -44,13 +45,14 @@ impl Chunk {
                         _ => cube_position,
                     };
 
-                    let noise_value = perlin.get([
-                        (adjusted_position.x / 50.0) as f64,
-                        (adjusted_position.y / 50.0) as f64,
-                        (adjusted_position.z / 50.0) as f64,
-                    ]);
+                    let generated_noise = get_layered_noise(
+                        noise.get_base_noise(adjusted_position),
+                        0.5,
+                        noise.get_detail_noise(adjusted_position),
+                        0.5
+                    );
 
-                    let cube_type = determine_cube_type(noise_value, adjusted_position);
+                    let cube_type = determine_cube_type(generated_noise, adjusted_position, y);
 
                     cubes.push(Cube::new(adjusted_position, cube_type));
                 }
@@ -80,18 +82,4 @@ impl Chunk {
     }
 }
 
-//todo move to cube
-fn determine_cube_type(noise_value: f64, position: Vector3<f32>) -> CubeType {
-    // TODO adjust
-    if noise_value >= 0.0 {
-        if position.y < -10.0 {
-            CubeType::STONE
-        } else if position.y < 0.0 {
-            CubeType::DIRT
-        } else {
-            CubeType::GRASS
-        }
-    } else {
-        CubeType::AIR
-    }
-}
+

@@ -1,6 +1,7 @@
 use cgmath::{vec3, Vector3};
 use rand::Rng;
 use crate::creation::chunk::Chunk;
+use crate::game_specs::MIN_CHUNK_HEIGHT;
 
 // each cube type is also assigned a number for passing to the fragment shader in chunk.rs
 #[derive(Copy, Clone, PartialEq)]
@@ -103,9 +104,6 @@ impl Cube {
             indices: Cube::INDICES,
         };
 
-        // Generate vertices and indices
-        // cube.generate_vertices_and_indices();
-
         cube
     }
 
@@ -147,62 +145,22 @@ impl Cube {
         self._type = type_;
     }
 }
+pub fn determine_cube_type(noise_value: f64, position: Vector3<f32>, y: usize) -> CubeType {
 
-// impl Default for Cube {
-//     fn default() -> Self {
-//         Cube {
-//             position: vec3(0.0, 0.0, 0.0),
-//             _type : CubeType::AIR,
-//
-//             vertices: [
-//                 // Front Face
-//                 0.5, -0.5, -0.5, 1.0, 1.0,
-//                 0.5, 0.5, -0.5, 1.0, 0.0,
-//                 -0.5, 0.5, -0.5, 0.0, 0.0,
-//                 -0.5, 0.5, -0.5, 0.0, 0.0,
-//                 -0.5, -0.5, -0.5, 0.0, 1.0,
-//                 0.5, -0.5, -0.5, 1.0, 1.0,
-//
-//                 // Back Face
-//                 0.5, -0.5, 0.5, 1.0, 1.0,
-//                 0.5, 0.5, 0.5, 1.0, 0.0,
-//                 -0.5, 0.5, 0.5, 0.0, 0.0,
-//                 -0.5, 0.5, 0.5, 0.0, 0.0,
-//                 -0.5, -0.5, 0.5, 0.0, 1.0,
-//                 0.5, -0.5, 0.5, 1.0, 1.0,
-//
-//                 // Left Face
-//                 -0.5, 0.5, -0.5, 1.0, 1.0,
-//                 -0.5, -0.5, -0.5, 0.0, 1.0,
-//                 -0.5, -0.5, 0.5, 0.0, 0.0,
-//                 -0.5, -0.5, 0.5, 0.0, 0.0,
-//                 -0.5, 0.5, 0.5, 1.0, 0.0,
-//                 -0.5, 0.5, -0.5, 1.0, 1.0,
-//
-//                 // Right Face
-//                 0.5, 0.5, -0.5, 1.0, 1.0,
-//                 0.5, -0.5, -0.5, 0.0, 1.0,
-//                 0.5, -0.5, 0.5, 0.0, 0.0,
-//                 0.5, -0.5, 0.5, 0.0, 0.0,
-//                 0.5, 0.5, 0.5, 1.0, 0.0,
-//                 0.5, 0.5, -0.5, 1.0, 1.0,
-//
-//                 // Bottom Face
-//                 -0.5, -0.5, -0.5, 0.0, 1.0,
-//                 -0.5, -0.5, 0.5, 0.0, 0.0,
-//                 0.5, -0.5, 0.5, 1.0, 0.0,
-//                 0.5, -0.5, 0.5, 1.0, 0.0,
-//                 0.5, -0.5, -0.5, 1.0, 1.0,
-//                 -0.5, -0.5, -0.5, 0.0, 1.0,
-//
-//                 // Top Face
-//                 -0.5, 0.5, -0.5, 0.0, 1.0,
-//                 -0.5, 0.5, 0.5, 0.0, 0.0,
-//                 0.5, 0.5, 0.5, 1.0, 0.0,
-//                 0.5, 0.5, 0.5, 1.0, 0.0,
-//                 0.5, 0.5, -0.5, 1.0, 1.0,
-//                 -0.5, 0.5, -0.5, 0.0, 1.0,
-//             ]
-//         }
-//     }
-// }
+    if y == 0 {
+        return CubeType::STONE;
+    }
+
+    // TODO adjust to be more interesting
+    if noise_value > 0.0 {
+        if position.y < -5.0 {
+            CubeType::STONE
+        } else if position.y < 0.0 {
+            CubeType::DIRT
+        } else {
+            CubeType::GRASS
+        }
+    } else {
+        CubeType::AIR
+    }
+}
