@@ -1,7 +1,6 @@
 use cgmath::{vec3, Vector3};
 use rand::Rng;
 use crate::creation::chunk::Chunk;
-use crate::game_specs::MIN_CHUNK_HEIGHT;
 
 // each cube type is also assigned a number for passing to the fragment shader in chunk.rs
 #[derive(Copy, Clone, PartialEq)]
@@ -128,14 +127,12 @@ impl Cube {
         let mut num_neighbors = 0;
 
         for neighbor in self.direct_neighbors() {
-            if chunk.has_cube(neighbor) {
-                if chunk.at(neighbor) != CubeType::AIR {
-                    num_neighbors += 1;
-                }
+            if chunk.at(neighbor) != CubeType::AIR {
+                num_neighbors += 1;
             }
         }
 
-        //only return true if it's fully occluded
+        //only return true if it's fully "occluded"
         if num_neighbors == 6 {return true};
 
         return false;
@@ -146,7 +143,7 @@ impl Cube {
     }
 }
 pub fn determine_cube_type(noise_value: f64, position: Vector3<f32>, y: usize) -> CubeType {
-
+    // Guarantee "bedrock" layer of stone
     if y == 0 {
         return CubeType::STONE;
     }
@@ -160,6 +157,7 @@ pub fn determine_cube_type(noise_value: f64, position: Vector3<f32>, y: usize) -
         } else {
             CubeType::GRASS
         }
+
     } else {
         CubeType::AIR
     }

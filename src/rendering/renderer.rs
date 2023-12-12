@@ -39,7 +39,7 @@ impl Renderer {
             gl::GenVertexArrays(1, &mut self.vao);
             gl::BindVertexArray(self.vao);
 
-            // the whole world is cubes so the vertex and inex buffers will be the same for everything
+            // the whole world is cubes so the vertex and index buffers will be the same for everything
             let vbo = define_buffer(gl::ARRAY_BUFFER, &Cube::VERTICES, gl::STATIC_DRAW);
             //let ibo = define_buffer(gl::ELEMENT_ARRAY_BUFFER, &Cube::INDICES, gl::STATIC_DRAW); // TODO index buffer doesn't work, I have the order wrong
 
@@ -71,8 +71,6 @@ impl Renderer {
             self.shader_program.set_mat4(&CString::new("projection").unwrap(), &projection);
             self.shader_program.set_mat4(&CString::new("view").unwrap(), &view);
 
-            // // draw
-            // gl::BindVertexArray(self.vao);
 
             for i in 0..models.0.len() {
                 // only send model to renderer if it isn't air

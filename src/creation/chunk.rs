@@ -34,7 +34,7 @@ impl Chunk {
                         position.z * CHUNK_SIZE as f32 + z as f32,
                     );
 
-                    // Adjust position based on neighbor chunk
+                    // Adjust position based on neighbor chunk (will only apply to cubes at the beginning edge of a chunk)
                     let adjusted_position = match neighbor_chunk {
                         Some(neighbor) if x == 0 && neighbor.position.x < position.x => {
                             Vector3::new(cube_position.x - CHUNK_SIZE as f32, cube_position.y, cube_position.z)
@@ -47,9 +47,9 @@ impl Chunk {
 
                     let generated_noise = get_layered_noise(
                         noise.get_base_noise(adjusted_position),
-                        0.5,
+                        0.3,
                         noise.get_detail_noise(adjusted_position),
-                        0.5
+                        0.7
                     );
 
                     let cube_type = determine_cube_type(generated_noise, adjusted_position, y);
@@ -62,9 +62,9 @@ impl Chunk {
         Chunk::new(position, cubes)
     }
 
+    // TODO these two are very ineffiecient
     // check if this chunk contains a cube at the given position
     pub fn has_cube(&self, cube_position : Vector3<f32>) -> bool {
-        //todo super inefficient
         return self.cubes.iter().any( |cube| cube.position == cube_position);
     }
 
@@ -72,7 +72,10 @@ impl Chunk {
     pub fn at(&self, cube_position : Vector3<f32>) -> CubeType {
         let cube = self.cubes.iter().find(|cube| cube_position == cube.position);
 
-        return cube.unwrap()._type;
+        match cube {
+            Some(found_cube) => found_cube._type,
+            None => CubeType::AIR,
+        }
     }
 
     // set cube
